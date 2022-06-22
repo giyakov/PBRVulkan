@@ -1,0 +1,18 @@
+[submodule "Assets/PBRScenes"]
+	path = PBRVulkan/Assets/PBRScenes
+	url = https://github.com/Zielon/PBRScenes
+[submodule "third_party/glfw"]
+	path = PBRVulkan/third_party/glfw
+	url = https://github.com/glfw/glfw.git
+[submodule "third_party/glm"]
+	path = PBRVulkan/third_party/glm
+	url = https://github.com/g-truc/glm.git
+[submodule "third_party/tinyobjloader"]
+	path = PBRVulkan/third_party/tinyobjloader
+	url = https://github.com/tinyobjloader/tinyobjloader.git
+[submodule "third_party/stb"]
+	path = PBRVulkan/third_party/stb
+	url = https://github.com/nothings/stb.git
+[submodule "third_party/imgui"]
+	path = PBRVulkan/third_party/imgui
+	url = https://github.com/ocornut/imgui.git

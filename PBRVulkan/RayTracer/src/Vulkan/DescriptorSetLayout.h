@@ -1,7 +1,7 @@
 #pragma once
 
 #include "DescriptorsManager.h"
-#include "Vulkan.h"
+#include "Vulkan_api.h"
 
 namespace Tracer
 {

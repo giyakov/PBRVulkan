@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Vulkan.h"
+#include "Vulkan_api.h"
 
 #include "Rasterizer.h"
 #include "RaytracerGraphicsPipeline.h"

@@ -4,7 +4,7 @@
 #include <glm/gtx/hash.hpp>
 
 #include <array>
-#include "../Vulkan/Vulkan.h"
+#include "../Vulkan/Vulkan_api.h"
 
 namespace Geometry
 {

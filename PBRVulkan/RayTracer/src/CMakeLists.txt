@@ -67,7 +67,7 @@ set(src_files_vulkan
         Vulkan/Rasterizer.h
         Vulkan/Semaphore.cpp
         Vulkan/Surface.h
-        Vulkan/Vulkan.cpp
+        Vulkan/Vulkan_api.cpp
         Vulkan/AccelerationStructure.h
         Vulkan/Command.cpp
         Vulkan/Core.cpp
@@ -77,7 +77,7 @@ set(src_files_vulkan
         Vulkan/Raytracer.cpp
         Vulkan/Semaphore.h
         Vulkan/SwapChain.cpp
-        Vulkan/Vulkan.h
+        Vulkan/Vulkan_api.h
         Vulkan/BLAS.cpp
         Vulkan/CommandPool.cpp
         Vulkan/Core.h
@@ -129,7 +129,7 @@ set(src_files_vulkan
 
 set(src_files
         main.cpp
-	path.h
+        path.h
         )
 
 source_group("3rdParty" FILES ${src_files_3rdParty})
@@ -159,6 +159,6 @@ if (UNIX)
 endif ()
 
 set_target_properties(${exe_name} PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
-target_include_directories(${exe_name} PRIVATE . ${glfw3_INCLUDE_DIRS} ${glm_INCLUDE_DIRS} ${STB_INCLUDE_DIRS} ${Vulkan_INCLUDE_DIRS})
+target_include_directories(${exe_name} PRIVATE . ${glfw3_INCLUDE_DIRS} ${glm_INCLUDE_DIRS} ${Vulkan_INCLUDE_DIRS})
 target_link_directories(${exe_name} PRIVATE ${Vulkan_LIBRARY})
-target_link_libraries(${exe_name} PRIVATE glfw glm::glm imgui::imgui tinyobjloader::tinyobjloader ${Vulkan_LIBRARIES} ${extra_libs})
+target_link_libraries(${exe_name} PRIVATE glfw glm::glm imgui::imgui tinyobjloader::tinyobjloader stb ${Vulkan_LIBRARIES} ${extra_libs})

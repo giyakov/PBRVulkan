@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <filesystem>
 
-#include "../Vulkan/Vulkan.h"
+#include "../Vulkan/Vulkan_api.h"
 
 namespace Tracer
 {

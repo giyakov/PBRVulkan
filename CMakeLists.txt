@@ -41,10 +41,6 @@ if (UNIX)
 
 endif ()
 
-find_package(glfw3 CONFIG REQUIRED)
-find_package(glm CONFIG REQUIRED)
-find_package(imgui CONFIG REQUIRED)
-find_package(tinyobjloader CONFIG REQUIRED)
 find_package(Vulkan REQUIRED)
 find_path(STB_INCLUDE_DIRS "stb.h")
 
@@ -66,5 +62,6 @@ if (NOT Vulkan_GLSLANG_VALIDATOR)
 endif ()
 
 set(MAIN_PROJECT "PBRVulkan")
+include(PBRVulkan/third_party/CMakeLists.txt)
 add_subdirectory(PBRVulkan/RayTracer/src)
 set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT ${MAIN_PROJECT})

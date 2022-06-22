@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "../Vulkan/Vulkan.h"
+#include "../Vulkan/Vulkan_api.h"
 #include "../Vulkan/TextureSampler.h"
 #include "../Vulkan/ImageView.h"
 #include "../Vulkan/Image.h"
