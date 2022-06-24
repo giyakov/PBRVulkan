@@ -136,14 +136,10 @@ namespace Tracer
 		const float distance = 5.0f;
 		const auto pos = ImVec2(distance, distance);
 		const auto posPivot = ImVec2(0.0f, 0.0f);
-		const auto flags =
-//			ImGuiWindowFlags_AlwaysAutoResize |
-//			ImGuiWindowFlags_NoMove |
-//			ImGuiWindowFlags_NoResize |
+		const auto flags = ImGuiWindowFlags_NoMove |
+			ImGuiWindowFlags_NoResize |
 			ImGuiWindowFlags_NoSavedSettings;
-
-//		ImGui::SetNextWindowPos(pos, ImGuiCond_Always, posPivot);
-//		ImGui::SetNextWindowSize(ImVec2(185, 450), ImGuiCond_Always);
+		ImGui::SetNextWindowPos(ImVec2(0, 0));
 
 		if (ImGui::Begin("Settings", &open, flags))
 		{

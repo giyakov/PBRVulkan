@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 struct Settings final
 {
 	bool UseRasterizer{};
@@ -17,6 +19,9 @@ struct Settings final
 	float Aperture = 0.001f;
 	float FocalDistance = 1.f;
 	float AORayLength = 0.5f;
+
+	std::string SavedImageName;
+	bool ShouldSaveImage = false;
 
 	[[nodiscard]] bool RequiresShaderRecompliation(const Settings& prev) const
 	{

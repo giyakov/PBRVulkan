@@ -40,6 +40,8 @@ set(src_files_tracer
         Tracer/Widgets/RendererWidget.h
         Tracer/Widgets/SceneWidget.h
         Tracer/Widgets/SceneWidget.cpp
+        Tracer/Widgets/SaveWidget.h
+        Tracer/Widgets/SaveWidget.cpp
         Tracer/Widgets/Widget.h
 
         Tracer/Application.cpp

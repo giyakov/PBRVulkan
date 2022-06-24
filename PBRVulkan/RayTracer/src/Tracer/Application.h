@@ -3,6 +3,8 @@
 #include "../Vulkan/Raytracer.h"
 #include "../Vulkan/Computer.h"
 
+#include <string>
+
 namespace Tracer
 {
 	/**
@@ -34,7 +36,9 @@ namespace Tracer
 		void PrintGPUInfo() const;
 		void CreateComputePipeline();
 		void ComputePipeline(VkCommandBuffer commandBuffer, uint32_t imageIndex) const;
-		
+		void SaveImage(std::string const &name,  uint32_t imageIndex);
+		void CreateTmpImage();
+
 		// User interface API
 		void OnKeyChanged(int key, int scanCode, int action, int mods) override;
 		void OnCursorPositionChanged(double xpos, double ypos) override;
@@ -44,6 +48,7 @@ namespace Tracer
 		std::unique_ptr<class Menu> menu;
 		std::unique_ptr<class Compiler> compiler;
 		std::unique_ptr<class Vulkan::Computer> computer;
+		std::unique_ptr<class Vulkan::Image> tmpImage;
 
 		uint32_t frame = 0;
 		uint32_t imageIndex = 0;

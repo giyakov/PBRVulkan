@@ -37,9 +37,9 @@ namespace Vulkan
 			return device;
 		}
 
+		[[nodiscard]] uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) const;
 	private:
 		const Device& device;
 		VkDeviceMemory memory;
-		[[nodiscard]] uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) const;
 	};
 }
