@@ -23,7 +23,7 @@ int PATH_TRACER_DEFAULT = 0;
 int PATH_TRACER_MSM = 1;
 int AMBIENT_OCCLUSION = 2;
 
-struct Material 
+struct Material
 { 
 	vec4 albedo;
 	vec4 emission;
@@ -51,8 +51,8 @@ struct Material
 
 struct Ray
 { 
-	vec3 origin; 
-	vec3 direction; 
+	vec3 origin;
+	vec3 direction;
 };
 
 struct Light
@@ -95,16 +95,16 @@ struct ComputeUniform
 
 struct LightSample
 { 
-	vec3 normal; 
+	vec3 normal;
 	vec3 position;
-	vec3 emission; 
+	vec3 emission;
 	float pdf;
 };
 
 struct BsdfSample
 {
-	vec3 bsdfDir; 
-	float pdf; 
+	vec3 bsdfDir;
+	float pdf;
 };
 
 struct RayPayload	
@@ -120,4 +120,9 @@ struct RayPayload
 	uint depth;
 	bool stop;
 	float eta;
+
+	// Polarisation
+	float Ea;
+	float Eb;
+	float psi;
 };

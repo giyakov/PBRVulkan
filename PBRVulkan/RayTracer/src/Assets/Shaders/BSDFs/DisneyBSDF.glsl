@@ -23,7 +23,8 @@
  */
 
 
-vec3 EvalDielectricReflection(in Material material, vec3 V, vec3 N, vec3 L, vec3 H, inout float pdf)
+vec3 EvalDielectricReflection(in Material material, vec3 V, vec3 N, vec3 L, vec3 H, inout float pdf,
+    in float Es, in float Ep, out bool chosenEs)
 {
     pdf = 0.0;
     if (dot(N, L) <= 0.0)
@@ -31,18 +32,19 @@ vec3 EvalDielectricReflection(in Material material, vec3 V, vec3 N, vec3 L, vec3
 
     float eta = payload.eta;
 
-    float F = DielectricFresnel(dot(V, H), eta);
+    float F = DielectricFresnel(dot(V, H), eta, Es, Ep, chosenEs);
     float D = GTR2(dot(N, H), material.roughness);
 
     pdf = D * dot(N, H) * F / (4.0 * abs(dot(V, H)));
 
     float G = SmithGGX(abs(dot(N, L)), material.roughness) * SmithGGX(abs(dot(N, V)), material.roughness);
-    
+
     return material.albedo.xyz * F * D * G;
 }
 
 
-vec3 EvalDielectricRefraction(in Material material, vec3 V, vec3 N, vec3 L, vec3 H, inout float pdf)
+vec3 EvalDielectricRefraction(in Material material, vec3 V, vec3 N, vec3 L, vec3 H, inout float pdf,
+    in float Es, in float Ep, out bool chosenEs)
 {
     float eta = payload.eta;
 
@@ -50,7 +52,7 @@ vec3 EvalDielectricRefraction(in Material material, vec3 V, vec3 N, vec3 L, vec3
     if (dot(N, L) >= 0.0)
         return vec3(0.0);
 
-    float F = DielectricFresnel(abs(dot(V, H)), eta);
+    float F = DielectricFresnel(abs(dot(V, H)), eta, Es, Ep, chosenEs);
     float D = GTR2(dot(N, H), material.roughness);
 
     float denomSqrt = dot(L, H) + dot(V, H) * eta;
@@ -119,9 +121,31 @@ vec3 EvalDiffuse(in Material material, in vec3 Csheen, vec3 V, vec3 N, vec3 L, v
     return ((1.0 / PI) * mix(Fd, ss, material.subsurface) * material.albedo.xyz + Fsheen) * (1.0 - material.metallic);
 }
 
-
 vec3 DisneySample(in Material material, inout vec3 L, inout float pdf)
 {
+    float Es, Ep;
+    bool chosenEs = false;
+    {
+        float Ea = payload.Ea;
+        float Eb = payload.Eb;
+        float psi = payload.psi;
+
+        vec3 Ox = normalize(cross(gl_WorldRayDirectionEXT, vec3(0.0F, 1.0F, 0.0F)));
+        vec3 Oy = normalize(cross(Ox, gl_WorldRayDirectionEXT));
+
+        float phi = rnd(seed) * TWO_PI;
+        float Eksi = Ea * cos(phi);
+        float Edzeta = Eb * sin(phi);
+        float Ex = Eksi * cos(psi) - Edzeta * sin(psi);
+        float Ey = Eksi * sin(psi) + Edzeta * cos(psi);
+
+        vec3 N = normalize(cross(gl_WorldRayDirectionEXT, payload.ffnormal));
+        vec3 M = normalize(cross(N, gl_WorldRayDirectionEXT));
+
+        Es = Ex * dot(Ox, N) + Ey * dot(Oy, N);
+        Ep = Ex * dot(Ox, M) + Ey * dot(Oy, M);
+    }
+
     pdf = 0.0;
     vec3 f = vec3(0.0);
 
@@ -153,18 +177,18 @@ vec3 DisneySample(in Material material, inout vec3 L, inout float pdf)
             H = -H;
 
         vec3 R = reflect(-V, H);
-        float F = DielectricFresnel(abs(dot(R, H)), eta);
+        float F = DielectricFresnel(abs(dot(R, H)), eta, Es, Ep, chosenEs);
 
         // Reflection/Total internal reflection
         if (r2 < F)
         {
             L = normalize(R);
-            f = EvalDielectricReflection(material, V, N, L, H, pdf);
+            f = EvalDielectricReflection(material, V, N, L, H, pdf, Es, Ep, chosenEs);
         }
         else // Transmission
         {
             L = normalize(refract(-V, H, eta));
-            f = EvalDielectricRefraction(material, V, N, L, H, pdf);
+            f = EvalDielectricRefraction(material, V, N, L, H, pdf, Es, Ep, chosenEs);
         }
 
         f *= transWeight;
@@ -220,9 +244,27 @@ vec3 DisneySample(in Material material, inout vec3 L, inout float pdf)
         pdf *= (1.0 - transWeight);
     }
 
+    float E = chosenEs ? Es : Ep;
+    float psi = 0.0F;
+
+    {
+        vec3 iN = normalize(cross(gl_WorldRayDirectionEXT, payload.ffnormal));
+        vec3 iM = normalize(cross(iN, gl_WorldRayDirectionEXT));
+
+        vec3 oOx = normalize(cross(L, vec3(0.0F, 1.0F, 0.0F)));
+
+        vec3 vE = E * (chosenEs ? iM :  iN);
+        float dt = dot(vE, oOx);
+        psi = dt >= 0 ? acos(dt) : -1.0F * acos(-dt);
+    }
+
+    payload.Ea = E;
+    payload.Eb = 0.0F;
+    payload.psi = psi;
+
     return f;
 }
-    
+
 vec3 DisneyEval(Material material, vec3 L, inout float pdf)
 {
     vec3 N = payload.ffnormal;
@@ -248,17 +290,18 @@ vec3 DisneyEval(Material material, vec3 L, inout float pdf)
     vec3 bsdf = vec3(0.0);
     float brdfPdf = 0.0;
     float bsdfPdf = 0.0;
+    bool chosenEs;
 
     if (transWeight > 0.0)
     {
         // Reflection
         if (refl)
         {
-            bsdf = EvalDielectricReflection(material, V, N, L, H, bsdfPdf);
+            bsdf = EvalDielectricReflection(material, V, N, L, H, bsdfPdf, 1.0F, 1.0F, chosenEs);
         }
         else // Transmission
         {
-            bsdf = EvalDielectricRefraction(material, V, N, L, H, bsdfPdf);
+            bsdf = EvalDielectricRefraction(material, V, N, L, H, bsdfPdf, 1.0F, 1.0F, chosenEs);
         }
     }
 

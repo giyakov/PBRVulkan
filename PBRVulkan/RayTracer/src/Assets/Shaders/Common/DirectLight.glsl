@@ -58,7 +58,7 @@ vec3 directLight(in Material material)
 
 		isShadowed = true;
 
-		// The light has to be visible from the surface. Less than 90° between vectors.
+		// The light has to be visible from the surface. Less than 90ï¿½ between vectors.
 		if (dot(payload.ffnormal, lightDir) <= 0.0 || dot(lightDir, sampled.normal) >= 0.0)
 			return L;
 

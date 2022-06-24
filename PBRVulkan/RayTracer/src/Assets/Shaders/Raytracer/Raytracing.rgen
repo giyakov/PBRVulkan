@@ -58,6 +58,9 @@ void main()
 		vec3 beta = vec3(1);
 		vec3 absorption = vec3(0.0);
 		vec3 pathRadiance = vec3(0);
+		float Ea = 1.0F;
+		float Eb = 1.0F;
+		float psi = 0.0F;
 		BsdfSample bsdf;
 
 		for (uint j = 0; j < ubo.maxDepth; ++j)
@@ -69,6 +72,9 @@ void main()
 			payload.ray = ray;
 			payload.bsdf = bsdf;
 			payload.absorption = absorption;
+			payload.Ea = Ea;
+			payload.Eb = Eb;
+			payload.psi = psi;
 
 			traceRayEXT(
 					TLAS,           // acceleration structure
@@ -85,11 +91,14 @@ void main()
 			);
 
 			pathRadiance = payload.radiance;
-			beta = payload.beta;		
+			beta = payload.beta;
 			ray = payload.ray;
 			bsdf = payload.bsdf;
 			absorption = payload.absorption;
-			
+			Ea = payload.Ea;
+			Eb = payload.Eb;
+			psi = payload.psi;
+
 			// First hit payload. Store infromation for denosing
 			if (j == 0)
 			{

@@ -65,7 +65,7 @@ void main()
 	float eta = dot(normal, ffnormal) > 0.0 ? (1.0 / material.ior) : material.ior;
 
 	// Update the material properties using textures
-	
+
 	// Albedo
 	if (material.albedoTexID >= 0)
 	{
@@ -90,7 +90,7 @@ void main()
 		normal = normalize(nrm);
 		ffnormal = dot(normal, gl_WorldRayDirectionEXT) <= 0.0 ? normal : normal * -1.0;
 	}
-	
+
 	payload.worldPos = worldPos;
 	payload.normal = normal;
 	payload.ffnormal = ffnormal;

@@ -56,7 +56,7 @@ float SchlickFresnel(float u)
 	return m * m * m * m * m; // power of 5
 }
 
-float DielectricFresnel(float cos_theta_i, float eta)
+float DielectricFresnel(float cos_theta_i, float eta, in float Es, in float Ep, out bool chosenEs)
 {
 	float sinThetaTSq = eta * eta * (1.0f - cos_theta_i * cos_theta_i);
 
@@ -69,7 +69,15 @@ float DielectricFresnel(float cos_theta_i, float eta)
 	float rs = (eta * cos_theta_t - cos_theta_i) / (eta * cos_theta_t + cos_theta_i);
 	float rp = (eta * cos_theta_i - cos_theta_t) / (eta * cos_theta_i + cos_theta_t);
 
-	return 0.5f * (rs * rs + rp * rp);
+	float u = rnd(seed);
+	float thr = Ep * Ep / (Ep * Ep + Es * Es);
+	if (u <= thr) {
+		chosenEs = false;
+		return rp * rp;
+	} else {
+		chosenEs = true;
+		return rs * rs;
+	}
 }
 
 /*

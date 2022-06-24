@@ -13,7 +13,7 @@
  */
 {
 	BsdfSample bsdfSample;
-	LightSample lightSample;	
+	LightSample lightSample;
 
 	payload.radiance += material.emission.xyz * payload.beta;
 
