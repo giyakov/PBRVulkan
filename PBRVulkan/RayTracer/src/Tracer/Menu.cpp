@@ -71,6 +71,9 @@ namespace Tracer
 		}
 
 		auto& io = ImGui::GetIO();
+		auto& style = ImGui::GetStyle();
+		style.ScaleAllSizes(2.0F);
+		io.FontGlobalScale = 2.0F;
 
 		auto root = Path::Root({"PBRVulkan", "Assets", "Fonts", "Cousine-Regular.ttf"});
 
@@ -134,13 +137,13 @@ namespace Tracer
 		const auto pos = ImVec2(distance, distance);
 		const auto posPivot = ImVec2(0.0f, 0.0f);
 		const auto flags =
-			ImGuiWindowFlags_AlwaysAutoResize |
-			ImGuiWindowFlags_NoMove |
-			ImGuiWindowFlags_NoResize |
+//			ImGuiWindowFlags_AlwaysAutoResize |
+//			ImGuiWindowFlags_NoMove |
+//			ImGuiWindowFlags_NoResize |
 			ImGuiWindowFlags_NoSavedSettings;
 
-		ImGui::SetNextWindowPos(pos, ImGuiCond_Always, posPivot);
-		ImGui::SetNextWindowSize(ImVec2(185, 450), ImGuiCond_Always);
+//		ImGui::SetNextWindowPos(pos, ImGuiCond_Always, posPivot);
+//		ImGui::SetNextWindowSize(ImVec2(185, 450), ImGuiCond_Always);
 
 		if (ImGui::Begin("Settings", &open, flags))
 		{

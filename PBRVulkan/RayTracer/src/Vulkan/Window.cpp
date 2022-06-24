@@ -54,6 +54,7 @@ namespace Vulkan
 
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+		//glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_TRUE);
 
 		window = glfwCreateWindow(1080, 1080, "PBRVulkan", nullptr, nullptr);
 

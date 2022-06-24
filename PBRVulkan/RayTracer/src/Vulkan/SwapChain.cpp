@@ -124,7 +124,9 @@ namespace Vulkan
 	{
 		for (const auto& availablePresentMode : availablePresentModes)
 		{
-			if (availablePresentMode == VK_PRESENT_MODE_MAILBOX_KHR)
+			constexpr auto PREFERRED_MODE = VK_PRESENT_MODE_MAILBOX_KHR;
+			// constexpr auto PREFERRED_MODE = VK_PRESENT_MODE_FIFO_KHR;
+			if (availablePresentMode == PREFERRED_MODE)
 			{
 				return availablePresentMode;
 			}
