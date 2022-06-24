@@ -65,3 +65,7 @@ set(MAIN_PROJECT "PBRVulkan")
 include(PBRVulkan/third_party/CMakeLists.txt)
 add_subdirectory(PBRVulkan/RayTracer/src)
 set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT ${MAIN_PROJECT})
+
+add_executable(differ
+    PBRVulkan/differ/main.cpp
+)
