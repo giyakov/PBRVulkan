@@ -33,6 +33,28 @@
 
 #include <iostream>
 #include <fstream>
+#include <chrono>
+
+class Timer {
+public:
+    static void start()
+    {
+        m_start = std::chrono::system_clock::now();
+    }
+
+    static auto stop()
+    {
+        m_stop = std::chrono::system_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(m_stop - m_start);
+        return duration.count();
+    }
+private:
+    static std::chrono::time_point<std::chrono::system_clock> m_start;
+    static std::chrono::time_point<std::chrono::system_clock> m_stop;
+};
+std::chrono::time_point<std::chrono::system_clock> Timer::m_start = std::chrono::system_clock::now();
+std::chrono::time_point<std::chrono::system_clock> Timer::m_stop = std::chrono::system_clock::now();
+
 
 namespace Tracer
 {
@@ -71,8 +93,10 @@ namespace Tracer
 
 	void Application::UpdateSettings()
 	{
-		if (settings.SceneId != menu->GetSettings().SceneId)
+		if (settings.SceneId != menu->GetSettings().SceneId) {
 			RecreateSwapChain();
+			newScene = true;
+		}
 
 		if (settings.RequiresShaderRecompliation(menu->GetSettings()))
 			RecompileShaders();
@@ -588,13 +612,49 @@ namespace Tracer
 		vkDestroyImage(device->Get(), dstImage, nullptr);
 	}
 
+	const char* scenes[18] = {
+		"Ajax",
+		"Bedroom",
+		"Boy",
+		"Coffee cart",
+		"Coffee maker",
+		"Cornell box",
+		"Dining room",
+		"Dragon",
+		"Hyperion",
+		"Panther",
+		"Spaceship",
+		"Staircase",
+		"Stormtroopers",
+		"Teapot",
+		"Hyperion II",
+		"Mustang",
+		"Mustang Red",
+		"Furnace"
+	};
+
 	void Application::Run()
 	{
+		static int frameCounter = 0;
+		static int64_t allFrameTimes = 0;
+
 		while (!glfwWindowShouldClose(window->Get()) && !terminate)
 		{
 			glfwPollEvents();
 			UpdateSettings();
-			DrawFrame();
+
+			if (frameCounter < 100) {
+				Timer::start();
+				DrawFrame();
+				allFrameTimes += Timer::stop();
+				frameCounter++;
+			} else {
+				double avgFrameTime = allFrameTimes / 100.0;
+				frameCounter = 0;
+				allFrameTimes = 0;
+				std::cout << "Scene " << scenes[settings.SceneId] << " avg{100} = " << avgFrameTime << '\n';
+				DrawFrame();
+			}
 		}
 
 		device->WaitIdle();
