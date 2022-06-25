@@ -73,11 +73,11 @@ void main()
 			payload.bsdf = bsdf;
 			payload.absorption = absorption;
 
+#ifdef POLARIZATION
 			payload.Ea = Ea;
 			payload.Eb = Eb;
 			payload.psi = psi;
-			payload.Ox = normalize(cross(ray.direction, vec3(0.0F, 1.0F, 0.0F)));
-			payload.Oy = normalize(cross(payload.Ox, ray.direction));
+#endif
 
 			traceRayEXT(
 					TLAS,           // acceleration structure
@@ -98,9 +98,12 @@ void main()
 			ray = payload.ray;
 			bsdf = payload.bsdf;
 			absorption = payload.absorption;
+
+#ifdef POLARIZATION
 			Ea = payload.Ea;
 			Eb = payload.Eb;
 			psi = payload.psi;
+#endif
 
 			// First hit payload. Store infromation for denosing
 			if (j == 0)

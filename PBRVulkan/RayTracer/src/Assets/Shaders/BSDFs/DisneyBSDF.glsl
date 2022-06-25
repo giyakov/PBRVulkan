@@ -126,13 +126,14 @@ vec3 DisneySample(in Material material, inout vec3 L, inout float pdf)
     float Es, Ep;
     vec3 iN, iM;
     bool chosenEs = false;
+#ifdef POLARIZATION
     {
         float Ea = payload.Ea;
         float Eb = payload.Eb;
         float psi = payload.psi;
 
-        vec3 Ox = payload.Ox;
-        vec3 Oy = payload.Oy;
+        vec3 Ox = normalize(cross(gl_WorldRayDirectionEXT, vec3(0.0F, 1.0F, 0.0F)));
+        vec3 Oy = normalize(cross(Ox, gl_WorldRayDirectionEXT));
 
         float phi = rnd(seed) * TWO_PI;
         float Eksi = Ea * cos(phi);
@@ -146,6 +147,7 @@ vec3 DisneySample(in Material material, inout vec3 L, inout float pdf)
         Es = Ex * dot(Ox, iN) + Ey * dot(Oy, iN);
         Ep = Ex * dot(Ox, iM) + Ey * dot(Oy, iM);
     }
+#endif
 
     pdf = 0.0;
     vec3 f = vec3(0.0);
@@ -245,6 +247,7 @@ vec3 DisneySample(in Material material, inout vec3 L, inout float pdf)
         pdf *= (1.0 - transWeight);
     }
 
+#ifdef POLARIZATION
     float E = chosenEs ? Es : Ep;
     float psi = 0.0F;
 
@@ -258,6 +261,7 @@ vec3 DisneySample(in Material material, inout vec3 L, inout float pdf)
     payload.Ea = E;
     payload.Eb = 0.0F;
     payload.psi = psi;
+#endif
 
     return f;
 }

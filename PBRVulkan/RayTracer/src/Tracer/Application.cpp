@@ -123,6 +123,9 @@ namespace Tracer
 		if (settings.UseGammaCorrection)
 			defines.push_back(Parser::Define::USE_GAMMA_CORRECTION);
 
+		if (settings.UsePolarisation) 
+			defines.push_back(Parser::Define::USE_POLARIZATION);
+
 		includes.push_back(static_cast<Parser::Include>(settings.IntegratorType));
 
 		compiler->Compile(includes, defines);

@@ -69,6 +69,7 @@ float DielectricFresnel(float cos_theta_i, float eta, in float Es, in float Ep, 
 	float rs = (eta * cos_theta_t - cos_theta_i) / (eta * cos_theta_t + cos_theta_i);
 	float rp = (eta * cos_theta_i - cos_theta_t) / (eta * cos_theta_i + cos_theta_t);
 
+#ifdef POLARIZATION
 	float u = rnd(seed);
 	float thr = Ep * Ep / (Ep * Ep + Es * Es);
 	if (u <= thr) {
@@ -78,6 +79,8 @@ float DielectricFresnel(float cos_theta_i, float eta, in float Es, in float Ep, 
 		chosenEs = true;
 		return rs * rs;
 	}
+#endif
+	return mix(rp * rp, rs * rs, 0.5);
 }
 
 /*

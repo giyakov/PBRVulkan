@@ -121,10 +121,9 @@ struct RayPayload
 	bool stop;
 	float eta;
 
-	// Polarisation
+#ifdef POLARIZATION
 	float Ea;
 	float Eb;
 	float psi;
-	vec3 Ox;
-	vec3 Oy;
+#endif
 };

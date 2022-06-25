@@ -38,7 +38,7 @@ namespace Vulkan
 
 		poolSizes.reserve(descriptorBindings.size());
 		for (const auto& binding : descriptorBindings)
-			poolSizes.push_back(VkDescriptorPoolSize{ binding.Type, binding.DescriptorCount });
+			poolSizes.push_back(VkDescriptorPoolSize{ binding.Type, binding.DescriptorCount * 5 });
 
 		VkDescriptorPoolCreateInfo poolInfo{};
 		poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;

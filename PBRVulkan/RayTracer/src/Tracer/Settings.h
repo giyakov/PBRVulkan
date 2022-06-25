@@ -20,12 +20,14 @@ struct Settings final
 	float FocalDistance = 1.f;
 	float AORayLength = 0.5f;
 
+	bool UsePolarisation = false;
 	std::string SavedImageName;
 	bool ShouldSaveImage = false;
 
 	[[nodiscard]] bool RequiresShaderRecompliation(const Settings& prev) const
 	{
-		return UseGammaCorrection != prev.UseGammaCorrection || IntegratorType != prev.IntegratorType;
+		return UseGammaCorrection != prev.UseGammaCorrection || IntegratorType != prev.IntegratorType ||
+			UsePolarisation != prev.UsePolarisation;
 	}
 
 	[[nodiscard]] bool RequiresAccumulationReset(const Settings& prev) const
@@ -43,6 +45,7 @@ struct Settings final
 			AORayLength != prev.AORayLength ||
 			HdrMultiplier != prev.HdrMultiplier ||
 			UseEnvMap != prev.UseEnvMap ||
-			DoubleSidedLight != prev.DoubleSidedLight;
+			DoubleSidedLight != prev.DoubleSidedLight ||
+			UsePolarisation != prev.UsePolarisation;
 	}
 };
