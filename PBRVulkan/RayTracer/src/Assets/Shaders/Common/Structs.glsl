@@ -125,4 +125,6 @@ struct RayPayload
 	float Ea;
 	float Eb;
 	float psi;
+	vec3 Ox;
+	vec3 Oy;
 };

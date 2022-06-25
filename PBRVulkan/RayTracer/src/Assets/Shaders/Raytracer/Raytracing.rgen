@@ -72,9 +72,12 @@ void main()
 			payload.ray = ray;
 			payload.bsdf = bsdf;
 			payload.absorption = absorption;
+
 			payload.Ea = Ea;
 			payload.Eb = Eb;
 			payload.psi = psi;
+			payload.Ox = normalize(cross(ray.direction, vec3(0.0F, 1.0F, 0.0F)));
+			payload.Oy = normalize(cross(payload.Ox, ray.direction));
 
 			traceRayEXT(
 					TLAS,           // acceleration structure

@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
     }
 
     Image a(argv[1]);
-    Image b(argv[1]);
+    Image b(argv[2]);
     Image diff = ImageDiff(a, b);
     diff.write(argv[3]);
     return 0;

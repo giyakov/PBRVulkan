@@ -124,14 +124,15 @@ vec3 EvalDiffuse(in Material material, in vec3 Csheen, vec3 V, vec3 N, vec3 L, v
 vec3 DisneySample(in Material material, inout vec3 L, inout float pdf)
 {
     float Es, Ep;
+    vec3 iN, iM;
     bool chosenEs = false;
     {
         float Ea = payload.Ea;
         float Eb = payload.Eb;
         float psi = payload.psi;
 
-        vec3 Ox = normalize(cross(gl_WorldRayDirectionEXT, vec3(0.0F, 1.0F, 0.0F)));
-        vec3 Oy = normalize(cross(Ox, gl_WorldRayDirectionEXT));
+        vec3 Ox = payload.Ox;
+        vec3 Oy = payload.Oy;
 
         float phi = rnd(seed) * TWO_PI;
         float Eksi = Ea * cos(phi);
@@ -139,11 +140,11 @@ vec3 DisneySample(in Material material, inout vec3 L, inout float pdf)
         float Ex = Eksi * cos(psi) - Edzeta * sin(psi);
         float Ey = Eksi * sin(psi) + Edzeta * cos(psi);
 
-        vec3 N = normalize(cross(gl_WorldRayDirectionEXT, payload.ffnormal));
-        vec3 M = normalize(cross(N, gl_WorldRayDirectionEXT));
+        iN = normalize(cross(gl_WorldRayDirectionEXT, payload.ffnormal));
+        iM = normalize(cross(iN, gl_WorldRayDirectionEXT));
 
-        Es = Ex * dot(Ox, N) + Ey * dot(Oy, N);
-        Ep = Ex * dot(Ox, M) + Ey * dot(Oy, M);
+        Es = Ex * dot(Ox, iN) + Ey * dot(Oy, iN);
+        Ep = Ex * dot(Ox, iM) + Ey * dot(Oy, iM);
     }
 
     pdf = 0.0;
@@ -248,11 +249,7 @@ vec3 DisneySample(in Material material, inout vec3 L, inout float pdf)
     float psi = 0.0F;
 
     {
-        vec3 iN = normalize(cross(gl_WorldRayDirectionEXT, payload.ffnormal));
-        vec3 iM = normalize(cross(iN, gl_WorldRayDirectionEXT));
-
         vec3 oOx = normalize(cross(L, vec3(0.0F, 1.0F, 0.0F)));
-
         vec3 vE = E * (chosenEs ? iM :  iN);
         float dt = dot(vE, oOx);
         psi = dt >= 0 ? acos(dt) : -1.0F * acos(-dt);
