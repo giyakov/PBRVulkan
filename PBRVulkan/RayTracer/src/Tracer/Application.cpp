@@ -548,7 +548,7 @@ namespace Tracer
 		std::ofstream file(name, std::ios::out | std::ios::binary);
 
 		// ppm header
-		file << "P6\n" << swapChain->Extent.width << "\n" << swapChain->Extent.height << "\n" << 255 << "\n";
+		file << "P6\n" << swapChain->Extent.width << "\n" << swapChain->Extent.height << "\n255\n";
 
 		// If source is BGR (destination is always RGB) and we can't use blit (which does automatic conversion), we'll have to manually swizzle color components
 		bool colorSwizzle = false;
